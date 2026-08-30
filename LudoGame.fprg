@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Flowgorithm fileversion="4.2">
+
+  <!-- ============================================================
+       MAIN  –  entry point
+  ============================================================ -->
+  <Function name="Main" type="None" variable="">
+    <Params/>
+    <Body>
+      <Call expression="TurtleSetup()"/>
+      <Call expression="DrawBoard()"/>
+      <Call expression="InitTokens()"/>
+      <Call expression="PlayGame()"/>
+    </Body>
+  </Function>
+
+  <!-- ============================================================
+       TurtleSetup
+  ============================================================ -->
+  <Function name="TurtleSetup" type="None" variable="">
+    <Params/>
+    <Body>
+      <Call expression="TurtleDrawingArea(700, 700)"/>
+      <Call expression="TurtleSpeed(0)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(-300, 300)"/>
+      <Call expression="TurtlePenDown()"/>
+    </Body>
+  </Function>
+
+  <Function name="FillRect" type="None" variable="">
+    <Params>
+      <Param name="px" type="Real"/>
+      <Param name="py" type="Real"/>
+      <Param name="w"  type="Real"/>
+      <Param name="h"  type="Real"/>
+    </Params>
+    <Body>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(px, py)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleSetAngle(0)"/>
+      <Call expression="TurtleForward(w)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(h)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(w)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(h)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenUp()"/>
+    </Body>
+  </Function>
+
+  <Function name="DrawGrid" type="None" variable="">
+    <Params>
+      <Param name="sx"   type="Real"/>
+      <Param name="sy"   type="Real"/>
+      <Param name="cols" type="Integer"/>
+      <Param name="rows" type="Integer"/>
+      <Param name="cs"   type="Real"/>
+    </Params>
+    <Body>
+      <Assign variable="r" expression="0"/>
+      <While condition="r &lt; rows">
+        <Assign variable="c" expression="0"/>
+        <While condition="c &lt; cols">
+          <Call expression="TurtlePenUp()"/>
+          <Call expression="TurtleGoTo(sx + c*cs, sy - r*cs)"/>
+          <Call expression="TurtlePenDown()"/>
+          <Call expression="TurtleSetAngle(0)"/>
+          <Call expression="TurtleForward(cs)"/>
+          <Call expression="TurtleRight(90)"/>
+          <Call expression="TurtleForward(cs)"/>
+          <Call expression="TurtleRight(90)"/>
+          <Call expression="TurtleForward(cs)"/>
+          <Call expression="TurtleRight(90)"/>
+          <Call expression="TurtleForward(cs)"/>
+          <Call expression="TurtleRight(90)"/>
+          <Call expression="TurtlePenUp()"/>
+          <Assign variable="c" expression="c + 1"/>
+        </While>
+        <Assign variable="r" expression="r + 1"/>
+      </While>
+    </Body>
+  </Function>
+
+  <Function name="DrawTokenCircle" type="None" variable="">
+    <Params>
+      <Param name="cx" type="Real"/>
+      <Param name="cy" type="Real"/>
+      <Param name="r"  type="Real"/>
+      <Param name="R"  type="Integer"/>
+      <Param name="G"  type="Integer"/>
+      <Param name="B"  type="Integer"/>
+    </Params>
+    <Body>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(cx, cy - r)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtlePenColor(60, 60, 60)"/>
+      <Call expression="TurtleFillColor(R, G, B)"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleCircle(r)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenUp()"/>
+    </Body>
+  </Function>
+
+  <Function name="DrawStar" type="None" variable="">
+    <Params>
+      <Param name="cx" type="Real"/>
+      <Param name="cy" type="Real"/>
+      <Param name="r"  type="Real"/>
+      <Param name="R"  type="Integer"/>
+      <Param name="G"  type="Integer"/>
+      <Param name="B"  type="Integer"/>
+    </Params>
+    <Body>
+      <Assign variable="i"  expression="0"/>
+      <Assign variable="ir" expression="r * 0.4"/>
+      <Call expression="TurtlePenColor(R, G, B)"/>
+      <Call expression="TurtleFillColor(R, G, B)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(cx, cy + r)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <While condition="i &lt; 8">
+        <Assign variable="ang" expression="i * 45 * 3.14159 / 180"/>
+        <If condition="i MOD 2 = 0">
+          <True>
+            <Assign variable="px" expression="cx + r  * Sin(ang)"/>
+            <Assign variable="py" expression="cy + r  * Cos(ang)"/>
+          </True>
+          <False>
+            <Assign variable="px" expression="cx + ir * Sin(ang)"/>
+            <Assign variable="py" expression="cy + ir * Cos(ang)"/>
+          </False>
+        </If>
+        <Call expression="TurtleGoTo(px, py)"/>
+        <Assign variable="i" expression="i + 1"/>
+      </While>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenUp()"/>
+    </Body>
+  </Function>
+
+  <Function name="DrawCentreX" type="None" variable="">
+    <Params>
+      <Param name="x" type="Real"/>
+      <Param name="y" type="Real"/>
+      <Param name="s" type="Real"/>
+    </Params>
+    <Body>
+      <Call expression="TurtlePenColor(180,30,30)"/>
+      <Call expression="TurtleFillColor(180,30,30)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(x, y)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleGoTo(x+s/2, y-s/2)"/>
+      <Call expression="TurtleGoTo(x, y-s)"/>
+      <Call expression="TurtleGoTo(x, y)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenColor(30,140,30)"/>
+      <Call expression="TurtleFillColor(30,140,30)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(x+s, y)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleGoTo(x+s/2, y-s/2)"/>
+      <Call expression="TurtleGoTo(x, y)"/>
+      <Call expression="TurtleGoTo(x+s, y)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenColor(30,50,180)"/>
+      <Call expression="TurtleFillColor(30,50,180)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(x+s, y-s)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleGoTo(x+s/2, y-s/2)"/>
+      <Call expression="TurtleGoTo(x+s, y)"/>
+      <Call expression="TurtleGoTo(x+s, y-s)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenColor(210,170,0)"/>
+      <Call expression="TurtleFillColor(210,170,0)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(x, y-s)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleBeginFill()"/>
+      <Call expression="TurtleGoTo(x+s/2, y-s/2)"/>
+      <Call expression="TurtleGoTo(x+s, y-s)"/>
+      <Call expression="TurtleGoTo(x, y-s)"/>
+      <Call expression="TurtleEndFill()"/>
+      <Call expression="TurtlePenUp()"/>
+    </Body>
+  </Function>
+
+  <Function name="DrawBoard" type="None" variable="">
+    <Params/>
+    <Body>
+      <Assign variable="ox" expression="-300"/>
+      <Assign variable="oy" expression="300"/>
+      <Assign variable="cs" expression="40"/>
+      <Call expression="TurtlePenColor(210,190,155)"/>
+      <Call expression="TurtleFillColor(210,190,155)"/>
+      <Call expression="FillRect(ox, oy, 600, 600)"/>
+      <Call expression="TurtlePenColor(180,30,30)"/>
+      <Call expression="TurtleFillColor(180,30,30)"/>
+      <Call expression="FillRect(ox, oy, 240, 240)"/>
+      <Call expression="TurtlePenColor(255,255,255)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+cs, oy-cs, 160, 160)"/>
+      <Call expression="DrawTokenCircle(ox+60,  oy-60,  18, 180,30,30)"/>
+      <Call expression="DrawTokenCircle(ox+140, oy-60,  18, 180,30,30)"/>
+      <Call expression="DrawTokenCircle(ox+60,  oy-140, 18, 180,30,30)"/>
+      <Call expression="DrawTokenCircle(ox+140, oy-140, 18, 180,30,30)"/>
+      <Call expression="TurtlePenColor(30,140,30)"/>
+      <Call expression="TurtleFillColor(30,140,30)"/>
+      <Call expression="FillRect(ox+360, oy, 240, 240)"/>
+      <Call expression="TurtlePenColor(255,255,255)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+400, oy-cs, 160, 160)"/>
+      <Call expression="DrawTokenCircle(ox+420, oy-60,  18, 30,140,30)"/>
+      <Call expression="DrawTokenCircle(ox+500, oy-60,  18, 30,140,30)"/>
+      <Call expression="DrawTokenCircle(ox+420, oy-140, 18, 30,140,30)"/>
+      <Call expression="DrawTokenCircle(ox+500, oy-140, 18, 30,140,30)"/>
+      <Call expression="TurtlePenColor(210,170,0)"/>
+      <Call expression="TurtleFillColor(210,170,0)"/>
+      <Call expression="FillRect(ox, oy-360, 240, 240)"/>
+      <Call expression="TurtlePenColor(255,255,255)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+cs, oy-400, 160, 160)"/>
+      <Call expression="DrawTokenCircle(ox+60,  oy-420, 18, 210,170,0)"/>
+      <Call expression="DrawTokenCircle(ox+140, oy-420, 18, 210,170,0)"/>
+      <Call expression="DrawTokenCircle(ox+60,  oy-500, 18, 210,170,0)"/>
+      <Call expression="DrawTokenCircle(ox+140, oy-500, 18, 210,170,0)"/>
+      <Call expression="TurtlePenColor(30,50,180)"/>
+      <Call expression="TurtleFillColor(30,50,180)"/>
+      <Call expression="FillRect(ox+360, oy-360, 240, 240)"/>
+      <Call expression="TurtlePenColor(255,255,255)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+400, oy-400, 160, 160)"/>
+      <Call expression="DrawTokenCircle(ox+420, oy-420, 18, 30,50,180)"/>
+      <Call expression="DrawTokenCircle(ox+500, oy-420, 18, 30,50,180)"/>
+      <Call expression="DrawTokenCircle(ox+420, oy-500, 18, 30,50,180)"/>
+      <Call expression="DrawTokenCircle(ox+500, oy-500, 18, 30,50,180)"/>
+      <Call expression="TurtlePenColor(200,200,200)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+240, oy, 120, 240)"/>
+      <Call expression="TurtleFillColor(30,140,30)"/>
+      <Call expression="FillRect(ox+280, oy-cs, 40, 200)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+240, oy-360, 120, 240)"/>
+      <Call expression="TurtleFillColor(210,170,0)"/>
+      <Call expression="FillRect(ox+280, oy-360, 40, 200)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox, oy-240, 240, 120)"/>
+      <Call expression="TurtleFillColor(180,30,30)"/>
+      <Call expression="FillRect(ox+cs, oy-280, 200, 40)"/>
+      <Call expression="TurtleFillColor(255,255,255)"/>
+      <Call expression="FillRect(ox+360, oy-240, 240, 120)"/>
+      <Call expression="TurtleFillColor(30,50,180)"/>
+      <Call expression="FillRect(ox+360, oy-280, 200, 40)"/>
+      <Call expression="TurtlePenColor(210,170,0)"/>
+      <Call expression="TurtleFillColor(210,170,0)"/>
+      <Call expression="FillRect(ox+240, oy-240, 120, 120)"/>
+      <Call expression="DrawCentreX(ox+240, oy-240, 120)"/>
+      <Call expression="DrawStar(ox+1*cs+20, oy-6*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+6*cs+20, oy-1*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+8*cs+20, oy-2*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+13*cs+20, oy-6*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+12*cs+20, oy-8*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+8*cs+20, oy-13*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+6*cs+20, oy-12*cs-20, 14, 210,170,0)"/>
+      <Call expression="DrawStar(ox+1*cs+20, oy-8*cs-20, 14, 210,170,0)"/>
+      <Call expression="TurtlePenColor(160,140,110)"/>
+      <Call expression="DrawGrid(ox+240, oy, 3, 6, cs)"/>
+      <Call expression="DrawGrid(ox+240, oy-360, 3, 6, cs)"/>
+      <Call expression="DrawGrid(ox, oy-240, 6, 3, cs)"/>
+      <Call expression="DrawGrid(ox+360, oy-240, 6, 3, cs)"/>
+      <Call expression="TurtlePenColor(140,80,20)"/>
+      <Call expression="TurtlePenWidth(4)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtleGoTo(ox, oy)"/>
+      <Call expression="TurtlePenDown()"/>
+      <Call expression="TurtleSetAngle(0)"/>
+      <Call expression="TurtleForward(600)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(600)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(600)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtleForward(600)"/>
+      <Call expression="TurtleRight(90)"/>
+      <Call expression="TurtlePenUp()"/>
+      <Call expression="TurtlePenWidth(1)"/>
+    </Body>
+  </Function>
+
+  <Function name="RollDice" type="Integer" variable="result">
+    <Params/>
+    <Body>
+      <Assign variable="result" expression="INT(Random() * 6) + 1"/>
+    </Body>
+  </Function>
+
+  <Function name="InitTokens" type="None" variable="">
+    <Params/>
+    <Body>
+      <Assign variable="redPos[0]"    expression="-1"/>
+      <Assign variable="redPos[1]"    expression="-1"/>
+      <Assign variable="redPos[2]"    expression="-1"/>
+      <Assign variable="redPos[3]"    expression="-1"/>
+      <Assign variable="greenPos[0]"  expression="-1"/>
+      <Assign variable="greenPos[1]"  expression="-1"/>
+      <Assign variable="greenPos[2]"  expression="-1"/>
+      <Assign variable="greenPos[3]"  expression="-1"/>
+      <Assign variable="yellowPos[0]" expression="-1"/>
+      <Assign variable="yellowPos[1]" expression="-1"/>
+      <Assign variable="yellowPos[2]" expression="-1"/>
+      <Assign variable="yellowPos[3]" expression="-1"/>
+      <Assign variable="bluePos[0]"   expression="-1"/>
+      <Assign variable="bluePos[1]"   expression="-1"/>
+      <Assign variable="bluePos[2]"   expression="-1"/>
+      <Assign variable="bluePos[3]"   expression="-1"/>
+      <Assign variable="redFin"    expression="0"/>
+      <Assign variable="greenFin"  expression="0"/>
+      <Assign variable="yellowFin" expression="0"/>
+      <Assign variable="blueFin"   expression="0"/>
+    </Body>
+  </Function>
+
+  <Function name="GetPathCell" type="None" variable="">
+    <Params>
+      <Param name="step"   type="Integer"/>
+      <Param name="colour" type="Integer"/>
+      <Param name="cellX"  type="Integer"/>
+      <Param name="cellY"  type="Integer"/>
+    </Params>
+    <Body>
+      <Assign variable="offset" expression="colour * 13"/>
+      <Assign variable="abs"    expression="((step - 1 + offset) MOD 52) + 1"/>
+      <If condition="abs &gt;= 1 AND abs &lt;= 5"><True><Assign variable="cellX" expression="abs"/><Assign variable="cellY" expression="6"/></True></If>
+      <If condition="abs &gt;= 6 AND abs &lt;= 11"><True><Assign variable="cellX" expression="6"/><Assign variable="cellY" expression="6 - (abs-5)"/></True></If>
+      <If condition="abs &gt;= 12 AND abs &lt;= 13"><True><Assign variable="cellX" expression="6 + (abs-11)"/><Assign variable="cellY" expression="0"/></True></If>
+      <If condition="abs &gt;= 14 AND abs &lt;= 19"><True><Assign variable="cellX" expression="8"/><Assign variable="cellY" expression="abs-13"/></True></If>
+      <If condition="abs &gt;= 20 AND abs &lt;= 24"><True><Assign variable="cellX" expression="8 + (abs-19)"/><Assign variable="cellY" expression="6"/></True></If>
+      <If condition="abs &gt;= 25 AND abs &lt;= 26"><True><Assign variable="cellX" expression="14"/><Assign variable="cellY" expression="6 + (abs-24)"/></True></If>
+      <If condition="abs &gt;= 27 AND abs &lt;= 31"><True><Assign variable="cellX" expression="14 - (abs-26)"/><Assign variable="cellY" expression="8"/></True></If>
+      <If condition="abs &gt;= 32 AND abs &lt;= 37"><True><Assign variable="cellX" expression="8"/><Assign variable="cellY" expression="8 + (abs-31)"/></True></If>
+      <If condition="abs &gt;= 38 AND abs &lt;= 39"><True><Assign variable="cellX" expression="8 - (abs-37)"/><Assign variable="cellY" expression="14"/></True></If>
+      <If condition="abs &gt;= 40 AND abs &lt;= 45"><True><Assign variable="cellX" expression="6"/><Assign variable="cellY" expression="14 - (abs-39)"/></True></If>
+      <If condition="abs &gt;= 46 AND abs &lt;= 50"><True><Assign variable="cellX" expression="6 - (abs-45)"/><Assign variable="cellY" expression="8"/></True></If>
+      <If condition="abs &gt;= 51 AND abs &lt;= 52"><True><Assign variable="cellX" expression="0"/><Assign variable="cellY" expression="8 - (abs-50)"/></True></If>
+      <If condition="step &gt;= 53 AND step &lt;= 57">
+        <True>
+          <Assign variable="hs" expression="step - 52"/>
+          <If condition="colour = 0"><True><Assign variable="cellX" expression="7"/><Assign variable="cellY" expression="7 - hs"/></True></If>
+          <If condition="colour = 1"><True><Assign variable="cellX" expression="7"/><Assign variable="cellY" expression="hs"/></True></If>
+          <If condition="colour = 2"><True><Assign variable="cellX" expression="7"/><Assign variable="cellY" expression="7 + hs"/></True></If>
+          <If condition="colour = 3"><True><Assign variable="cellX" expression="7 + hs"/><Assign variable="cellY" expression="7"/></True></If>
+        </True>
+      </If>
+    </Body>
+  </Function>
+
+  <Function name="DrawAllTokens" type="None" variable="">
+    <Params/>
+    <Body>
+      <Assign variable="ox" expression="-300"/>
+      <Assign variable="oy" expression="300"/>
+      <Assign variable="cs" expression="40"/>
+      <Assign variable="ti" expression="0"/>
+      <While condition="ti &lt; 4">
+        <If condition="redPos[ti] &gt;= 1 AND redPos[ti] &lt; 57"><True><Call expression="GetPathCell(redPos[ti], 0, cx, cy)"/><Call expression="DrawTokenCircle(ox+cx*cs+20, oy-cy*cs-20, 14, 180,30,30)"/></True></If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+      <Assign variable="ti" expression="0"/>
+      <While condition="ti &lt; 4">
+        <If condition="greenPos[ti] &gt;= 1 AND greenPos[ti] &lt; 57"><True><Call expression="GetPathCell(greenPos[ti], 1, cx, cy)"/><Call expression="DrawTokenCircle(ox+cx*cs+20, oy-cy*cs-20, 14, 30,140,30)"/></True></If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+      <Assign variable="ti" expression="0"/>
+      <While condition="ti &lt; 4">
+        <If condition="yellowPos[ti] &gt;= 1 AND yellowPos[ti] &lt; 57"><True><Call expression="GetPathCell(yellowPos[ti], 2, cx, cy)"/><Call expression="DrawTokenCircle(ox+cx*cs+20, oy-cy*cs-20, 14, 210,170,0)"/></True></If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+      <Assign variable="ti" expression="0"/>
+      <While condition="ti &lt; 4">
+        <If condition="bluePos[ti] &gt;= 1 AND bluePos[ti] &lt; 57"><True><Call expression="GetPathCell(bluePos[ti], 3, cx, cy)"/><Call expression="DrawTokenCircle(ox+cx*cs+20, oy-cy*cs-20, 14, 30,50,180)"/></True></If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+    </Body>
+  </Function>
+
+  <Function name="MoveColour" type="Integer" variable="moved">
+    <Params>
+      <Param name="colour" type="Integer"/>
+      <Param name="dice"   type="Integer"/>
+    </Params>
+    <Body>
+      <Assign variable="moved" expression="0"/>
+      <Assign variable="ti"    expression="0"/>
+      <While condition="ti &lt; 4 AND moved = 0">
+        <If condition="colour = 0 AND redPos[ti] = -1 AND dice = 6"><True><Assign variable="redPos[ti]" expression="1"/><Assign variable="moved" expression="1"/></True></If>
+        <If condition="colour = 1 AND greenPos[ti] = -1 AND dice = 6"><True><Assign variable="greenPos[ti]" expression="1"/><Assign variable="moved" expression="1"/></True></If>
+        <If condition="colour = 2 AND yellowPos[ti] = -1 AND dice = 6"><True><Assign variable="yellowPos[ti]" expression="1"/><Assign variable="moved" expression="1"/></True></If>
+        <If condition="colour = 3 AND bluePos[ti] = -1 AND dice = 6"><True><Assign variable="bluePos[ti]" expression="1"/><Assign variable="moved" expression="1"/></True></If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+      <Assign variable="ti" expression="0"/>
+      <While condition="ti &lt; 4 AND moved = 0">
+        <If condition="colour = 0 AND redPos[ti] &gt;= 1 AND redPos[ti] &lt; 57">
+          <True>
+            <Assign variable="np" expression="redPos[ti] + dice"/>
+            <If condition="np &lt;= 57"><True><Assign variable="redPos[ti]" expression="np"/></True><False><Assign variable="np" expression="redPos[ti]"/></False></If>
+            <If condition="np = 57"><True><Assign variable="redFin" expression="redFin + 1"/><Output expression="&quot;Red token reached home!&quot;"/></True></If>
+            <Assign variable="moved" expression="1"/>
+          </True>
+        </If>
+        <If condition="colour = 1 AND greenPos[ti] &gt;= 1 AND greenPos[ti] &lt; 57">
+          <True>
+            <Assign variable="np" expression="greenPos[ti] + dice"/>
+            <If condition="np &lt;= 57"><True><Assign variable="greenPos[ti]" expression="np"/></True><False><Assign variable="np" expression="greenPos[ti]"/></False></If>
+            <If condition="np = 57"><True><Assign variable="greenFin" expression="greenFin + 1"/><Output expression="&quot;Green token reached home!&quot;"/></True></If>
+            <Assign variable="moved" expression="1"/>
+          </True>
+        </If>
+        <If condition="colour = 2 AND yellowPos[ti] &gt;= 1 AND yellowPos[ti] &lt; 57">
+          <True>
+            <Assign variable="np" expression="yellowPos[ti] + dice"/>
+            <If condition="np &lt;= 57"><True><Assign variable="yellowPos[ti]" expression="np"/></True><False><Assign variable="np" expression="yellowPos[ti]"/></False></If>
+            <If condition="np = 57"><True><Assign variable="yellowFin" expression="yellowFin + 1"/><Output expression="&quot;Yellow token reached home!&quot;"/></True></If>
+            <Assign variable="moved" expression="1"/>
+          </True>
+        </If>
+        <If condition="colour = 3 AND bluePos[ti] &gt;= 1 AND bluePos[ti] &lt; 57">
+          <True>
+            <Assign variable="np" expression="bluePos[ti] + dice"/>
+            <If condition="np &lt;= 57"><True><Assign variable="bluePos[ti]" expression="np"/></True><False><Assign variable="np" expression="bluePos[ti]"/></False></If>
+            <If condition="np = 57"><True><Assign variable="blueFin" expression="blueFin + 1"/><Output expression="&quot;Blue token reached home!&quot;"/></True></If>
+            <Assign variable="moved" expression="1"/>
+          </True>
+        </If>
+        <Assign variable="ti" expression="ti + 1"/>
+      </While>
+    </Body>
+  </Function>
+
+  <Function name="PlayGame" type="None" variable="">
+    <Params/>
+    <Body>
+      <Assign variable="np" expression="0"/>
+      <Output expression="&quot;=== LUDO ===&quot;"/>
+      <Output expression="&quot;How many players? (2, 3 or 4)&quot;"/>
+      <Input  variable="np"/>
+      <If condition="np &lt; 2 OR np &gt; 4"><True><Assign variable="np" expression="2"/><Output expression="&quot;Defaulting to 2 players.&quot;"/></True></If>
+      <Assign variable="cname[0]" expression="&quot;Red&quot;"/>
+      <Assign variable="cname[1]" expression="&quot;Green&quot;"/>
+      <Assign variable="cname[2]" expression="&quot;Yellow&quot;"/>
+      <Assign variable="cname[3]" expression="&quot;Blue&quot;"/>
+      <Assign variable="over" expression="False"/>
+      <Assign variable="cp"   expression="0"/>
+      <While condition="over = False">
+        <Output expression="cname[cp] + &quot; - press Enter to roll the dice...&quot;"/>
+        <Input  variable="dummy"/>
+        <Assign variable="dv" expression="RollDice()"/>
+        <Output expression="cname[cp] + &quot; rolled a &quot; + dv"/>
+        <Call expression="MoveColour(cp, dv)"/>
+        <Call expression="DrawAllTokens()"/>
+        <If condition="cp = 0 AND redFin = 4"><True><Output expression="&quot;*** RED WINS! ***&quot;"/><Assign variable="over" expression="True"/></True></If>
+        <If condition="cp = 1 AND greenFin = 4"><True><Output expression="&quot;*** GREEN WINS! ***&quot;"/><Assign variable="over" expression="True"/></True></If>
+        <If condition="cp = 2 AND yellowFin = 4"><True><Output expression="&quot;*** YELLOW WINS! ***&quot;"/><Assign variable="over" expression="True"/></True></If>
+        <If condition="cp = 3 AND blueFin = 4"><True><Output expression="&quot;*** BLUE WINS! ***&quot;"/><Assign variable="over" expression="True"/></True></If>
+        <If condition="dv &lt;&gt; 6"><True><Assign variable="cp" expression="(cp + 1) MOD np"/></True></If>
+      </While>
+      <Output expression="&quot;Thanks for playing Ludo!&quot;"/>
+    </Body>
+  </Function>
+
+</Flowgorithm>
